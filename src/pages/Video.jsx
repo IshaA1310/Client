@@ -62,9 +62,6 @@ const Hr = styled.hr`
   border: 0.5px solid ${({ theme }) => theme.soft};
 `;
 
-// const Recommendation = styled.div`
-//   flex: 2;
-// `;
 const Channel = styled.div`
   display: flex;
   justify-content: space-between;
@@ -122,18 +119,14 @@ const Subscribe = styled.button`
 const Video = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
-  console.log(currentVideo, 'V I D E O', currentUser, "USER")
   const dispatch = useDispatch();
   const path = useLocation().pathname.split("/")[2];
-  console.log(path, 'P A T H')
   const [channel, setChannel] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('HI')
         const videoRes = await axios.get(`/videos/find/${path}`);
-        console.log(videoRes, 'VIDEO RES')
         const channelRes = await axios.get(
           `/users/find/${videoRes.data.userId}`
         );
@@ -158,14 +151,16 @@ const Video = () => {
       : await axios.put(`/users/sub/${channel._id}`);
     dispatch(subscription(channel._id));
   };
-  
+
+  if (!currentVideo || !currentUser) return <div>Loading...</div>;
+
   return (
     <Container>
       <Content>
         <VideoWrapper>
-        <VideoFrame src={currentVideo.videoUrl} controls />
+          <VideoFrame src={currentVideo.videoUrl} controls />
         </VideoWrapper>
-        {/* <Title>{currentVideo.name}</Title> */}
+        <Title>{currentVideo.title}</Title>
         <Details>
           <Info>{currentVideo.views} views • {format(currentVideo.created_at)}</Info>
           <Buttons>

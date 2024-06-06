@@ -54,20 +54,19 @@ const Info = styled.div`
 `;
 
 const Card = ({ type, video }) => {
-  const [channel, setChannel] = useState({}) // Initialize as an empty array
+  const [channel, setChannel] = useState({}); // Initialize as an empty object
 
   useEffect(() => {
     const fetchChannel = async () => {
       try {
         const res = await axios.get(`/users/find/${video.userId}`);
         if (res.data && res.data.data) {
-          // Wrap the single video object in an array
-          setChannel([res.data.data]);
+          setChannel(res.data.data);
         } else {
           console.error("Unexpected response data:", res.data);
         }
       } catch (error) {
-        console.error("Error fetching videos:", error);
+        console.error("Error fetching channel:", error);
       }
     };
     fetchChannel();
@@ -76,15 +75,9 @@ const Card = ({ type, video }) => {
   return (
     <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
       <Container type={type}>
-        <Image
-          type={type}
-          src={video.imgUrl}
-        />
+        <Image type={type} src={video.imgUrl} />
         <Details type={type}>
-          <ChannelImage
-            type={type}
-            src={channel.img}
-          />
+          <ChannelImage type={type} src={channel.img} />
           <Texts>
             <Title>{video.title}</Title>
             <ChannelName>{channel.name}</ChannelName>
@@ -95,5 +88,6 @@ const Card = ({ type, video }) => {
     </Link>
   );
 };
+
 
 export default Card;

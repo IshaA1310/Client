@@ -9,16 +9,22 @@ const Container = styled.div`
   flex-wrap: wrap;
 `;
 
-const Home = ({type}) => {
+// const Container = styled.div`
+//   display: grid;
+//   grid-template-columns: repeat(3, 1fr); // 3 columns grid
+//   gap: 10px; // Gap between grid items
+// `;
+
+
+const Home = ({ type }) => {
   const [videos, setVideos] = useState([]); // Initialize as an empty array
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
         const res = await axios.get(`/videos/${type}`);
-        if (res.data && res.data.data) {
-          // Wrap the single video object in an array
-          setVideos([res.data.data]);
+        if (res.data && Array.isArray(res.data.data)) {
+          setVideos(res.data.data);
         } else {
           console.error("Unexpected response data:", res.data);
         }
@@ -37,5 +43,6 @@ const Home = ({type}) => {
     </Container>
   );
 };
+
 
 export default Home;
